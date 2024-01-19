@@ -1,0 +1,26 @@
+.buttonContainer{
+    margin: 1%;
+    display: grid;
+    justify-items: end;
+}
+
+.buttonAdd{
+    width: 200px;
+    margin: 1%
+}
+
+.tabla{ 
+    margin-top: 1%;
+    text-align: center;
+}
+
+.table-row{
+    align-self:auto
+}
+
+.ejecutivoTablaModalButton {
+    width: 100%;
+    height: 100%;
+    justify-items: center ;
+    align-items: center;
+}
