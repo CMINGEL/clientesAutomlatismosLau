@@ -2,7 +2,6 @@ import { Button, Checkbox, Grid, List, ListItem, ListItemIcon, ListItemText, Pap
 import React, { useEffect } from 'react';
 import { serviciosURL } from '../server/server';
 
-
 function not(a, b) {
     return a.filter((value) => b.indexOf(value) === -1);
   }
@@ -15,8 +14,6 @@ const TransferList = ({servicios, setServicios}) => {
     
     const [checked, setChecked] = React.useState([]);
     const [left, setLeft] = React.useState([]);
-    const [right, setRight] = React.useState(servicios);
-
     useEffect(()=> {
       fetch(serviciosURL)
       .then((response) => response.json())
@@ -25,16 +22,16 @@ const TransferList = ({servicios, setServicios}) => {
         let rigthList=[]
         for (let item in jsonDatos){
           rigthList.push(jsonDatos[item].tipoServicio)
-          console.log(jsonDatos[item].tipoServicio)
         }
-        var result = rigthList.filter(el => !servicios.includes(el));
-        setLeft(result)
+    
+          var result = rigthList.filter(servicio => !servicios.includes(servicio));
+          setLeft(result)
       })
       .catch((error) => console.log(error));
   }, [servicios]);
 
     const leftChecked = intersection(checked, left);
-    const rightChecked = intersection(checked, right);
+    const rightChecked = intersection(checked, servicios);
     const handleToggle = (value) => () => {
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];
@@ -49,25 +46,25 @@ const TransferList = ({servicios, setServicios}) => {
       };
 
     const handleAllRight = () => {
-    setRight(right.concat(left));
+    setServicios(servicios.concat(left));
     setLeft([]);
     };
 
     const handleCheckedRight = () => {
-    setRight(right.concat(leftChecked));
+    setServicios(servicios.concat(leftChecked));
     setLeft(not(left, leftChecked));
     setChecked(not(checked, leftChecked));
     };
 
     const handleCheckedLeft = () => {
     setLeft(left.concat(rightChecked));
-    setRight(not(right, rightChecked));
+    setServicios(not(servicios, rightChecked));
     setChecked(not(checked, rightChecked));
     };
 
     const handleAllLeft = () => {
-    setLeft(left.concat(right));
-    setRight([]);
+    setLeft(left.concat(servicios));
+    setServicios([]);
     };
     
     const customList = (items) => (
@@ -142,14 +139,14 @@ const TransferList = ({servicios, setServicios}) => {
               variant="outlined"
               size="small"
               onClick={handleAllLeft}
-              disabled={right.length === 0}
+              disabled={servicios.length === 0}
               aria-label="move all left"
             >
               ≪
             </Button>
           </Grid>
         </Grid>
-        <Grid item>{customList(right)}</Grid>
+        <Grid item>{customList(servicios)}</Grid>
       </Grid>
     );
 }

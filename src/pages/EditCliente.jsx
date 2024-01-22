@@ -8,6 +8,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Membrete from '../components/membrete'
 import { useEjecutivosContext } from '../components/providers/useEjecutivos';
 import TransferList from '../components/transferList';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { green, pink,} from '@mui/material/colors';
 
 const EditCliente = () => {
     let navigate = useNavigate();
@@ -30,7 +33,7 @@ const EditCliente = () => {
     const fechaFinContrato = (initialValues.fechaFinContrato.slice(0,10))
     const [cliente, setCliente] = useState(initialValues);
     const [recarga, setRecarga] = useState(false);
-    
+    const [serviciosCliente, setServiciosCliente] = useState(cliente.servicios)  
 
     useEffect(()=>{
         if(ejecutivos.length<1){
@@ -69,7 +72,7 @@ const EditCliente = () => {
             body: JSON.stringify(
                 {numeroContacto:cliente.numeroContacto, email:cliente.email, tipoContrato:cliente.tipoContrato, 
                     fechaFinContrato:cliente.fechaFinContrato, ejecutivoCierre:cliente.ejecutivoCierre, 
-                    ejecutivoActual:cliente.ejecutivoActual, servicio:cliente.servicio
+                    ejecutivoActual:cliente.ejecutivoActual, servicios:serviciosCliente, 
                 }),
             headers: { 
                 'Content-Type': 'application/json',
@@ -106,11 +109,12 @@ const EditCliente = () => {
                 </Typography>
                 <Box component="form" noValidate autoComplete='off' sx={{m: 1, p: 1}}>
                     <div>
-                        <TextField fullWidth disabled label="Nombre Cliente" name='nombre' value={cliente.nombre} onChange={handleInput} style={{ display :'Block'}} sx={{pt:2}}/>
-                        <TextField fullWidth label="Numero Contacto" name='numeroContacto' value={cliente.numeroContacto} onChange={handleInput} style={{ display :'Block'}} sx={{pt:2}}/>
-                        <TextField fullWidth label="Email" name='email' onChange={handleInput} value={cliente.email} style={{ display :'Block'}} sx={{pt:2}}/>
-                        <InputLabel  id="tipoContrato">Tipo Contrato</InputLabel>
-                        <Select fullWidth label="Tipo de Contrato" name='tipoContrato' onChange={handleInput} value={cliente.tipoContrato} labelId="tipoContrato">
+                        <TextField fullWidth disabled label="Nombre Cliente" name='nombre' value={cliente.nombre} onChange={handleInput} style={{ display :'Block'}} sx={{mt:2}}/>
+                        <TextField fullWidth label="Numero Contacto" name='numeroContacto' value={cliente.numeroContacto} onChange={handleInput} style={{ display :'Block'}} sx={{mt:2}}/>
+                        <TextField fullWidth label="Email" name='email' onChange={handleInput} value={cliente.email} style={{ display :'Block'}} sx={{mt:2}}/>
+                        <InputLabel  id="tipoContratolabel">Tipo Contrato</InputLabel>
+
+                        <Select labelId="tipoContrato" fullWidth label="Tipo de Contrato" name='tipoContrato' onChange={handleInput} value={cliente.tipoContrato}>
                             <MenuItem value="Subscripcion">Subscripcion</MenuItem>
                             <MenuItem value="Licencia">Licencia</MenuItem>
                             <MenuItem value="Mantencion">Mantencion</MenuItem>
@@ -134,15 +138,30 @@ const EditCliente = () => {
                             </Select> : <Select fullWidth label="Ejecutivo a Cargo" name="ejecutivoActual" value={'Seleccionar'} labelId="ejecutivoActual">
                                 <MenuItem value="Seleccionar">Seleccionar</MenuItem> 
                             </Select>}
+                            <br></br>
                             <Box style={{margin:'10px'}}>
-                                <TransferList servicios={cliente.servicios}></TransferList>
+                                <Box component="div" >                                    
+                                    <h5 style={{textAlign:'center', fontSize:'18px'}}> 
+                                        Todos los Servicios 
+                                        <RemoveIcon sx={{fontSize:22, color: pink[500], verticalAlign:"middle"}} /> Servicios cliente 
+                                        <AddCircleOutlineIcon sx={{fontSize: 22, color: green[500], verticalAlign:"middle"}}/>
+                                    </h5> 
+                                </Box>
+                                
+
+                                <TransferList servicios={serviciosCliente} setServicios = {setServiciosCliente}></TransferList> 
                             </Box>
                             
                     </div>
 
                     <br></br>
-                    <Button variant="contained" size ='large' style={{ width:'47%',height:'100%', justifyItems:'center', alignItems:'center', marginRight:'6%'}} onClick={hanleSubmit}> Guardar </Button>
-                    <Button variant="contained" size= "large" color="error" style={{ width:'47%', height:'100%', justifyItems:'center', alignItems:'center'}} onClick={()=>{navigate('/')}}>Volver</Button>
+                    <Button variant="contained" size ='large' style={{ width:'47%',height:'100%', justifyItems:'center', alignItems:'center', marginRight:'6%'}} onClick={hanleSubmit}> 
+                        Guardar
+                    </Button>
+
+                    <Button variant="contained" size= "large" color="error" style={{ width:'47%', height:'100%', justifyItems:'center', alignItems:'center'}} onClick={()=>{navigate('/')}}>
+                        Volver
+                    </Button>
                     
                 </Box>
             </Box>
