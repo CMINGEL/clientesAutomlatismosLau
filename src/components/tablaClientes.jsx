@@ -14,13 +14,13 @@ import ImageIcon from '@mui/icons-material/Image';
 import WorkIcon from '@mui/icons-material/Work';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import '../styles/tablas.css'
+import FiltroClientes from './filtroClientes';
 
 const initialValues = {
     nombre: "",
     numeroContacto: "",
     email: "",
     tipoContrato: "Subscripcion",
-    servicio: "CPASS",
     fechaFinContrato: "Seleccionar" ,
     fechaInicioContrato: "Seleccionar",
     ejecutivoCierre: "Seleccionar",
@@ -46,9 +46,11 @@ const TablaClientes = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [cliente, setCliente] = useState(initialValues);
-    const [open, setOpen] = React.useState(false);
+    const [clientesFiltrados, setClientesFiltrados] = useState([]);
+    const [open, setOpen] = useState(false);
     const [paginationClientes, SetPaginationClientes] = useState([]);
     const [openDocuments, setopenDocuments] = useState(false);
+    const [verFiltros, setVerfiltros] = useState(false)
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     
@@ -62,27 +64,32 @@ const TablaClientes = () => {
     useEffect(()=> {
         setLoading(true)
         fetch(getClientes)
-        .then((response) => response.json())
-        .then((clientes)=>{
-            setClientes(clientes)
-            })
-        .catch((error) => setError('true'))
-        .finally(() => setLoading(false)
-        );
+            .then((response) => response.json())
+            .then((clientes)=>{
+                setClientes(clientes)
+                setClientesFiltrados(clientes)
+                })
+            .catch((error) => setError('true'))
+            .finally(() => setLoading(false)
+            );
     }, []);
 
+    
+
     const intPagination = 6
-    const numberPagination = Math.ceil(clientes.length/intPagination)
+    const numberPagination = Math.ceil(clientesFiltrados.length/intPagination)
 
     const handlePagination = (e, value) =>{
         const inicial = (value * intPagination) - intPagination
         const final =   (value * intPagination)
-        SetPaginationClientes(clientes.slice(inicial, final))
+        SetPaginationClientes(clientesFiltrados.slice(inicial, final))
     }
 
+
+
     useEffect(()=>{
-        SetPaginationClientes(clientes.slice(0,intPagination))
-    }, [clientes])
+        SetPaginationClientes(clientesFiltrados.slice(0,intPagination))
+    }, [clientesFiltrados])
 
     function handleInput (e) {
         const nombre = e.target.name
@@ -138,10 +145,10 @@ const TablaClientes = () => {
         navigate('/editcliente', { state : {cliente} });
     }
 
-    const nivelAlerta = (fecha1, fecha2) =>{
-        const fechaInicial = new Date(fecha1)
+    const nivelAlerta = (fecha2) =>{
+        const date = new Date();
         const fechaFinal = new Date(fecha2)
-        let dias = (fechaFinal.getTime() - fechaInicial.getTime()) / (1000*60*60*24)
+        let dias = (fechaFinal.getTime() - date.getTime()) / (1000*60*60*24)
 
         if (dias < 30){
             return <CircleRounded style={{color:'red'}} />
@@ -155,21 +162,23 @@ const TablaClientes = () => {
     return (
         <div className='tabla'>
             <h1> Tabla Clientes </h1>
+            <FiltroClientes verFiltros={verFiltros} setVerfiltros={setVerfiltros} clientes={clientes} setClientesFiltrados={setClientesFiltrados}/>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} size="small" aria-label="Tabla Clientes">
                 <TableHead>
+
                     <TableRow className='table-row'>
-                        <TableCell> ID </TableCell>
-                        <TableCell> CLIENTE </TableCell>
-                        <TableCell> CONTACTO </TableCell>
-                        <TableCell> MAIL </TableCell>
-                        <TableCell> TIPO CONTRATO </TableCell>
-                        <TableCell> FECHA INICIO CONTRATO </TableCell>
-                        <TableCell> FECHA FIN CONTRATO </TableCell>
-                        <TableCell> EJECUTIVO CIERRE </TableCell>
-                        <TableCell> EJECUTIVO A CARGO </TableCell>
-                        <TableCell> ALERTA </TableCell>
-                        <TableCell> DOCUMENTOS </TableCell>
+                        {/* <TableCell sx={{ fontWeight: 'bold' }}> ID </TableCell> */}
+                        <TableCell sx={{ fontWeight: 'bold' }}> CLIENTE </TableCell>
+                        {/* <TableCell sx={{ fontWeight: 'bold' }}> CONTACTO </TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}> MAIL </TableCell> */}
+                        <TableCell sx={{ fontWeight: 'bold' }}> TIPO CONTRATO </TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}> FECHA INICIO CONTRATO </TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}> FECHA FIN CONTRATO </TableCell>
+                        {/* <TableCell sx={{ fontWeight: 'bold' }}> EJECUTIVO CIERRE </TableCell> */}
+                        <TableCell sx={{ fontWeight: 'bold' }}> EJECUTIVO A CARGO </TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}> ALERTA </TableCell>
+                        <TableCell sx={{ fontWeight: 'bold' }}> DOCUMENTOS </TableCell>
                         {superUser && <TableCell> EDIT </TableCell>} 
                     </TableRow>
                 </TableHead>
@@ -180,16 +189,16 @@ const TablaClientes = () => {
 
                     {paginationClientes.map((row) => (
                     <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                        <TableCell> {row.id} </TableCell>
+                        {/* <TableCell> {row.id} </TableCell> */}
                         <TableCell>{row.nombre}</TableCell>
-                        <TableCell>{row.numeroContacto}</TableCell>
-                        <TableCell>{row.email}</TableCell>
+                        {/* <TableCell>{row.numeroContacto}</TableCell>
+                        <TableCell>{row.email}</TableCell> */}
                         <TableCell>{row.tipoContrato}</TableCell>
                         <TableCell> {`${removeTime(row.fechaInicioContrato)}`} </TableCell>
                         <TableCell> {`${removeTime(row.fechaFinContrato)}`}</TableCell>
-                        <TableCell>{row.ejecutivoCierre}</TableCell>
+                        {/* <TableCell>{row.ejecutivoCierre}</TableCell> */}
                         <TableCell>{row.ejecutivoActual}</TableCell>
-                        <TableCell>{nivelAlerta(row.fechaInicioContrato, row.fechaFinContrato)}</TableCell>
+                        <TableCell>{nivelAlerta(row.fechaFinContrato)}</TableCell>
                         <TableCell style={{position:'relative', textAlign:'center'}}> <FolderOpenIcon onClick={()=>(setopenDocuments(true))}></FolderOpenIcon>  
                         
                             <Dialog
@@ -251,8 +260,8 @@ const TablaClientes = () => {
                 </Box>
             </TableContainer>
             <Box component='div' className='buttonContainer'>
-                <Button variant="contained" onClick={handleOpen} className='buttonAdd'>Agregar Cliente</Button>
-                <Button onClick={()=>navigate('/agregarServicio')}> Agregar Servicio </Button> 
+                <Button variant="contained" onClick={handleOpen} className='buttonAdd' sx={{height:'48px'}}>Agregar Cliente</Button>
+                <Button onClick={()=>navigate('/agregarServicio')} sx={{height:'48px'}}> Agregar Servicio </Button> 
             </Box>
 
             
@@ -292,16 +301,6 @@ const TablaClientes = () => {
                                     onChange={(date)=>{handleInputDate((date), "fechaFinContrato") }} />
                             </LocalizationProvider>
 
-                            <InputLabel id="servicio">Servicio</InputLabel>
-                            <Select name='servicio' onChange={handleInput} value={cliente.servicio} fullWidth labelId="servicio" >
-                                <MenuItem value="Vpass">Vpass</MenuItem>
-                                <MenuItem value="CPASS">CPASS</MenuItem>
-                                <MenuItem value="GOS">GOS</MenuItem>
-                                <MenuItem value="GOS + CPASS">GOS + CPASS</MenuItem>
-                                <MenuItem value="EZCALL">EZCALL</MenuItem>
-                                <MenuItem value="ASISPASS">ASISPASS</MenuItem>
-                            </Select>
-                            <br></br>
                             <br></br>
                             <InputLabel id="ejecutivoCierre">Ejecutivo de Cierre</InputLabel>
                             <Select fullWidth label="Ejecutivodecierre" name='ejecutivoCierre' onChange={handleInput} value={cliente.ejecutivoCierre} labelId="ejecutivoCierre">

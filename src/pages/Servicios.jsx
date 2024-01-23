@@ -23,7 +23,8 @@ const Servicios = () => {
                 headers: { "Content-Type": "application/json"}})
                     .then((response) =>{
                     if (response.status===201){
-                        window.location.reload()
+                        navigate('/')
+                        //window.location.reload(false)
                     }
                     else if (response.status===400){
                         alert('No se permiten item repetidos')
@@ -70,8 +71,12 @@ const Servicios = () => {
                     
                     <br></br>
 
-                    <Button variant="contained" size ='large' style={{ width:'48%',height:'100%' ,justifyItems:'center', alignItems:'center', marginRight:'5%', marginTop:'3%'}} onClick={handlePost}> Guardar </Button>
-                    <Button variant="contained" size= "large" color="error" style={{ width:'47%',height:'100%', justifyItems:'center', alignItems:'center', marginTop:'3%'}} onClick={()=>{navigate('/')}}>Volver</Button>
+                    <Button variant="contained" size ='large' style={{ width:'48%',height:'100%' ,justifyItems:'center', alignItems:'center', marginRight:'5%', marginTop:'3%'}} onClick={handlePost}>
+                        Guardar 
+                    </Button>
+                    <Button variant="contained" size= "large" color="error" style={{ width:'47%',height:'100%', justifyItems:'center', alignItems:'center', marginTop:'3%'}} onClick={()=>{navigate('/')}}>
+                        Volver
+                    </Button>
                 </Box>
                     <TablaServicios servicios = {servicios} />
             </Box>
