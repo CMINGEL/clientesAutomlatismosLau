@@ -5,19 +5,19 @@ const TablaServicios = ( {servicios} ) => {
     return (
         <div>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} size="small" aria-label="Tabla Ejecutivos">
+                <Table size="small" aria-label="Tabla Ejecutivos">
                 <TableHead>
                     <TableRow>
-                        <TableCell style={{fontWeight: 'bold'}}> ID </TableCell>
-                        <TableCell style={{fontWeight: 'bold'}}> Servicio </TableCell>
+                        <TableCell style={{fontWeight: 'bold', textAlign:'center'}}> ID </TableCell>
+                        <TableCell style={{fontWeight: 'bold', textAlign:'center'}}> Servicio </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
   
                     {servicios.map((row) => (
                         <TableRow key={row.id}>
-                            <TableCell> {row.id} </TableCell>
-                            <TableCell> {row.tipoServicio}</TableCell>
+                            <TableCell style={{textAlign:'center'}}> {row.id} </TableCell>
+                            <TableCell style={{textAlign:'center'}}> {row.tipoServicio}</TableCell>
                         </TableRow>))}
 
                 </TableBody>

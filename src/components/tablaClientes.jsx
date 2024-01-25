@@ -1,12 +1,9 @@
 import React from 'react';
-import { Box, Button, InputLabel, MenuItem, Modal, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, Pagination, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
+import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Pagination, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material';
 import { useEffect, useState } from "react";
 import { getClientes } from '../server/server';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from 'react-router-dom';
-import { useEjecutivosContext } from './providers/useEjecutivos';
 import { jwtDecode } from "jwt-decode";
 import { CircleRounded } from '@mui/icons-material';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
@@ -15,6 +12,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import '../styles/tablas.css'
 import FiltroClientes from './filtroClientes';
+import TablaClientesModal from './tablaClientesModal';
 
 const initialValues = {
     nombre: "",
@@ -27,21 +25,8 @@ const initialValues = {
     ejecutivoActual: "Seleccionar"
 };
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    // width:400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-
 const TablaClientes = () => {
 
-    const ejecutivos2 = useEjecutivosContext()
     const [clientes, setClientes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -68,13 +53,12 @@ const TablaClientes = () => {
             .then((clientes)=>{
                 setClientes(clientes)
                 setClientesFiltrados(clientes)
+                // console.log(clientes)
                 })
             .catch((error) => setError('true'))
             .finally(() => setLoading(false)
             );
     }, []);
-
-    
 
     const intPagination = 6
     const numberPagination = Math.ceil(clientesFiltrados.length/intPagination)
@@ -85,31 +69,9 @@ const TablaClientes = () => {
         SetPaginationClientes(clientesFiltrados.slice(inicial, final))
     }
 
-
-
     useEffect(()=>{
         SetPaginationClientes(clientesFiltrados.slice(0,intPagination))
     }, [clientesFiltrados])
-
-    function handleInput (e) {
-        const nombre = e.target.name
-        const valor = e.target.value
-        setCliente({
-            ...cliente,
-            [nombre]:valor,
-        })
-    }
-
-    function handleInputDate (e, nombre) {
-        let mes = (parseInt(e['$M']) + 1).toString().padStart(2, '0')
-        let dia = e['$D'].toString().padStart(2, '0')
-        let formated = e['$y'] + '-' + mes + '-' + dia
-        
-        setCliente({
-            ...cliente,
-            [nombre] : formated,
-         })
-    }
 
     function removeTime(date){
         var options = { year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -117,30 +79,6 @@ const TablaClientes = () => {
         return fecha.toLocaleDateString("en-ES", options)
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        
-        fetch(getClientes, {
-            method:'POST',
-            body: JSON.stringify({nombre:cliente.nombre, numeroContacto:cliente.numeroContacto, email:cliente.email, tipoContrato:cliente.tipoContrato, 
-                fechaFinContrato:cliente.fechaFinContrato, fechaInicioContrato:cliente.fechaInicioContrato, ejecutivoCierre:cliente.ejecutivoCierre, 
-                ejecutivoActual:cliente.ejecutivoActual, servicio:cliente.servicios}),
-            headers: {
-                'Content-Type': 'application/json',
-                },
-        } )
-        .then((response) =>{
-            if (response.status===201){
-                setCliente(initialValues)
-                setOpen(false)
-                window.location.reload()
-            }else{
-                setOpen(false)
-                alert('error en el servidor')
-            }
-        })
-    
-    }
     const handleEdit = (cliente) =>{
         navigate('/editcliente', { state : {cliente} });
     }
@@ -264,66 +202,8 @@ const TablaClientes = () => {
                 <Button onClick={()=>navigate('/agregarServicio')} sx={{height:'48px'}}> Agregar Servicio </Button> 
             </Box>
 
-            
-
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-                >
-                <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Agregar Cliente Nuevo
-                    </Typography>
-                    <Box component="form" noValidate autoComplete='off' sx={{'& .MuiTextField-root': { m: 1, width: '25ch' },}}>
-                        <div>
-                            <TextField required label="Nombre Cliente" name='nombre' value={cliente.nombre} onChange={handleInput} />
-                            <TextField label="Numero Contacto" name='numeroContacto' value={cliente.numeroContacto} onChange={handleInput}/>
-                            <TextField label="Email" name='email' onChange={handleInput} value={cliente.email}/>
-
-                            <InputLabel id="tipoContrato">Tipo Contrato</InputLabel>
-                            <Select fullWidth label="Tipo de Contrato" name='tipoContrato' onChange={handleInput} value={cliente.tipoContrato} labelId="tipoContrato">
-                                <MenuItem value="Subscripcion">Subscripcion</MenuItem>
-                                <MenuItem value="Licencia">Licencia</MenuItem>
-                                <MenuItem value="Mantencion">Mantencion</MenuItem>
-                            </Select>
-
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DatePicker 
-                                    label="Fecha inicio contrato" 
-                                    name="fechaInicioContrato" 
-                                    onChange={(date)=>{handleInputDate((date), "fechaInicioContrato") }} />
-    
-                                <DatePicker 
-                                    label="Fecha de fin contrato" 
-                                    name="fechaFinContrato" 
-                                    onChange={(date)=>{handleInputDate((date), "fechaFinContrato") }} />
-                            </LocalizationProvider>
-
-                            <br></br>
-                            <InputLabel id="ejecutivoCierre">Ejecutivo de Cierre</InputLabel>
-                            <Select fullWidth label="Ejecutivodecierre" name='ejecutivoCierre' onChange={handleInput} value={cliente.ejecutivoCierre} labelId="ejecutivoCierre">
-                                <MenuItem value="Seleccionar">Seleccionar</MenuItem>
-                                {ejecutivos2.map((row) => (
-                                    <MenuItem key={row.id} value={row.nombre}> {row.nombre} </MenuItem>
-                                    ))}
-                            </Select>
-                            <br></br>
-                            <br></br>
-                            <InputLabel id="ejecutivoActual">Ejecutivo Actual</InputLabel>
-                            <Select fullWidth label="Ejecutivo a Cargo" name="ejecutivoActual" onChange={handleInput} value={cliente.ejecutivoActual} labelId="ejecutivoActual">
-                                <MenuItem value="Seleccionar">Seleccionar</MenuItem>
-                                {ejecutivos2.filter(ejecutivo => ejecutivo.activo).map((row) => (
-                                        <MenuItem key={row.nombre} value={row.nombre}> {row.nombre} </MenuItem>
-                                        ))}
-                            </Select>
-                        </div>
-                        <br></br>
-                        <Button variant="contained" size ='large' style={{width:'100%',height:'100%' ,justifyItems:'center', alignItems:'center'}} onClick={handleSubmit}> Agregar </Button>
-                    </Box>
-                </Box>
-            </Modal>
+            <TablaClientesModal open={open} handleClose={handleClose} cliente={cliente} setCliente={setCliente} initialValues={initialValues} setOpen={setOpen}> </TablaClientesModal>
+ 
 
         </div>
     );

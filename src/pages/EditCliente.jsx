@@ -31,6 +31,7 @@ const EditCliente = () => {
     };
     
     const fechaFinContrato = (initialValues.fechaFinContrato.slice(0,10))
+    const fechaInicioContrato = (initialValues.fechaInicioContrato.slice(0,10))
     const [cliente, setCliente] = useState(initialValues);
     const [recarga, setRecarga] = useState(false);
     const [serviciosCliente, setServiciosCliente] = useState(cliente.servicios)  
@@ -70,9 +71,9 @@ const EditCliente = () => {
         fetch(getClientes+`${cliente.id}/`, {
             method:'PATCH',
             body: JSON.stringify(
-                {numeroContacto:cliente.numeroContacto, email:cliente.email, tipoContrato:cliente.tipoContrato, 
-                    fechaFinContrato:cliente.fechaFinContrato, ejecutivoCierre:cliente.ejecutivoCierre, 
-                    ejecutivoActual:cliente.ejecutivoActual, servicios:serviciosCliente, 
+                {numeroContacto:cliente.numeroContacto.toString(), email:cliente.email.toString(), tipoContrato:cliente.tipoContrato.toString(), 
+                    fechaFinContrato:cliente.fechaFinContrato, fechaInicioContrato:cliente.fechaInicioContrato, ejecutivoCierre:cliente.ejecutivoCierre.toString(), 
+                    ejecutivoActual:cliente.ejecutivoActual.toString(), servicios:serviciosCliente, 
                 }),
             headers: { 
                 'Content-Type': 'application/json',
@@ -109,7 +110,7 @@ const EditCliente = () => {
                 </Typography>
                 <Box component="form" noValidate autoComplete='off' sx={{m: 1, p: 1}}>
                     <div>
-                        <TextField fullWidth disabled label="Nombre Cliente" name='nombre' value={cliente.nombre} onChange={handleInput} style={{ display :'Block'}} sx={{mt:2}}/>
+                        <TextField fullWidth label="Nombre Cliente" name='nombre' value={cliente.nombre} onChange={handleInput} style={{ display :'Block'}} sx={{mt:2}}/>
                         <TextField fullWidth label="Numero Contacto" name='numeroContacto' value={cliente.numeroContacto} onChange={handleInput} style={{ display :'Block'}} sx={{mt:2}}/>
                         <TextField fullWidth label="Email" name='email' onChange={handleInput} value={cliente.email} style={{ display :'Block'}} sx={{mt:2}}/>
                         <InputLabel  id="tipoContratolabel">Tipo Contrato</InputLabel>
@@ -119,6 +120,7 @@ const EditCliente = () => {
                             <MenuItem value="Licencia">Licencia</MenuItem>
                             <MenuItem value="Mantencion">Mantencion</MenuItem>
                         </Select> 
+
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <InputLabel  id="FinContrato" style={{marginTop:'2px'}}>Fecha Fin Contrato</InputLabel>
                             <DatePicker  
@@ -127,6 +129,16 @@ const EditCliente = () => {
                                 labelId="FinContrato"
                                 slotProps={{ textField: { fullWidth: true } }}
                                 onChange={(date)=>{handleInputDate((date), "fechaFinContrato") }} />
+                        </LocalizationProvider> 
+
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <InputLabel  id="InicioContrato" style={{marginTop:'2px'}}>Fecha Inicio Contrato</InputLabel>
+                            <DatePicker  
+                                defaultValue={dayjs(fechaInicioContrato)}
+                                name="fechaInicioContrato" 
+                                labelId="InicioContrato"
+                                slotProps={{ textField: { fullWidth: true } }}
+                                onChange={(date)=>{handleInputDate((date), "fechaInicioContrato") }} />
                         </LocalizationProvider> 
 
                         <InputLabel id="ejecutivoActual" value={cliente.ejecutivoActual}>Ejecutivo Actual</InputLabel>
