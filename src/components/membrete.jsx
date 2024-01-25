@@ -1,24 +1,48 @@
-import { Box } from '@mui/material';
+import { Box, Button, Menu, MenuItem } from '@mui/material';
 import React, { useState } from 'react';
 import lau from '../images/lau.gif';
 import cpass from '../images/logo-cpass.png'
 import { useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
+import { IconButton, } from '@mui/material/';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+
+import SettingsIcon from '@mui/icons-material/Settings';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PeopleIcon from '@mui/icons-material/People';
+import ListIcon from '@mui/icons-material/List';
 import { Link } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
   
 const Membrete = () => {
+
     let navigate = useNavigate();
     const [bearerToken, setBearerToken] = useState('')
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+
     const localToken = localStorage.getItem('Token')
     const tab = '\u00A0';
     let superUser = ''
     let name = ''
+
     
+    const handleClickSettings = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+
+    const handleCloseSettings = () => {
+        setAnchorEl(null);
+      };
+
+    const handleClickAgregarServicio = () => {
+        setAnchorEl(null);
+        navigate('/agregarServicio')
+      };
+
     useState(()=>{
         if (localToken != null){
             setBearerToken(localToken)
@@ -43,11 +67,36 @@ const Membrete = () => {
                         </Typography>
                         
                         <Typography variant="h6" color="inherit" component="div" style={{marginLeft: 'auto'}}>
+                        
                             {bearerToken.length > 0 ? 
                                 <Link to="/logout/" color="inherit" style={{color:'white', textDecoration: 'none'}}>Logout</Link> : 
                                 <Link to="/login/" color="inherit" style={{color:'white', textDecoration: 'none'}}>Login</Link> }                            
-                            {superUser && <Link to="/registrar/" color="inherit" style={{color:'white', textDecoration: 'none'}}>/Registrar</Link>} 
                         </Typography>
+                        
+                        <div>
+                            <Button
+                                id="basic-button"
+                                aria-controls={open ? 'basic-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                startIcon={<SettingsIcon sx={{color:'white'}}/>}
+                                onClick={handleClickSettings}>
+                            </Button>
+                            <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleCloseSettings}
+                                MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                                }}>
+
+                                <MenuItem onClick={handleClickAgregarServicio}> Añadir Servicios {tab}  <ListIcon sx={{color:'blue'}} />         </MenuItem>
+                                <MenuItem onClick={()=> navigate('/ejecutivos')}>Ver Ejecutivos {tab} {tab} {tab}<PeopleIcon sx={{color:'blue'}}/>   </MenuItem>
+                                {superUser && <MenuItem onClick={()=> navigate('/registrar')}>Nuevo Usuario {tab} {tab}{tab}<PersonAddIcon sx={{color:'blue'}}/>    </MenuItem>}
+
+                            </Menu>
+                        </div>
                     </Toolbar>
                 </AppBar>
             </Box>

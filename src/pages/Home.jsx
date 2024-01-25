@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import TablaClientes from '../components/tablaClientes';
-import TablaEjecutivos from '../components/tablaEjecutivos';
 import Membrete from '../components/membrete';
 import { useSetEjecutivosContext, useSetErrorEjecutivosContext, useSetLoadingEjecutivos } from '../components/providers/useEjecutivos';
 import { getejecutivos } from '../server/server';
@@ -51,7 +50,7 @@ let navigate = useNavigate();
                 margin:'auto'
                 }}>
                 <TablaClientes/>
-                <TablaEjecutivos/>
+                {/* <TablaEjecutivos/> */}
             </Box>
         </div>
     );

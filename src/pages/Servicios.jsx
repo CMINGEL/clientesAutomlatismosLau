@@ -78,7 +78,7 @@ const Servicios = () => {
                         Volver
                     </Button>
                 </Box>
-                    <TablaServicios servicios = {servicios} />
+                    <TablaServicios servicios = {servicios} setServicios={setServicios} />
             </Box>
         </div>
     );

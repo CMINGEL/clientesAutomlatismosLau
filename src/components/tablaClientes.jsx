@@ -53,7 +53,6 @@ const TablaClientes = () => {
             .then((clientes)=>{
                 setClientes(clientes)
                 setClientesFiltrados(clientes)
-                // console.log(clientes)
                 })
             .catch((error) => setError('true'))
             .finally(() => setLoading(false)
@@ -106,14 +105,10 @@ const TablaClientes = () => {
                 <TableHead>
 
                     <TableRow className='table-row'>
-                        {/* <TableCell sx={{ fontWeight: 'bold' }}> ID </TableCell> */}
                         <TableCell sx={{ fontWeight: 'bold' }}> CLIENTE </TableCell>
-                        {/* <TableCell sx={{ fontWeight: 'bold' }}> CONTACTO </TableCell>
-                        <TableCell sx={{ fontWeight: 'bold' }}> MAIL </TableCell> */}
                         <TableCell sx={{ fontWeight: 'bold' }}> TIPO CONTRATO </TableCell>
                         <TableCell sx={{ fontWeight: 'bold' }}> FECHA INICIO CONTRATO </TableCell>
                         <TableCell sx={{ fontWeight: 'bold' }}> FECHA FIN CONTRATO </TableCell>
-                        {/* <TableCell sx={{ fontWeight: 'bold' }}> EJECUTIVO CIERRE </TableCell> */}
                         <TableCell sx={{ fontWeight: 'bold' }}> EJECUTIVO A CARGO </TableCell>
                         <TableCell sx={{ fontWeight: 'bold' }}> ALERTA </TableCell>
                         <TableCell sx={{ fontWeight: 'bold' }}> DOCUMENTOS </TableCell>
@@ -127,14 +122,10 @@ const TablaClientes = () => {
 
                     {paginationClientes.map((row) => (
                     <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                        {/* <TableCell> {row.id} </TableCell> */}
                         <TableCell>{row.nombre}</TableCell>
-                        {/* <TableCell>{row.numeroContacto}</TableCell>
-                        <TableCell>{row.email}</TableCell> */}
                         <TableCell>{row.tipoContrato}</TableCell>
                         <TableCell> {`${removeTime(row.fechaInicioContrato)}`} </TableCell>
                         <TableCell> {`${removeTime(row.fechaFinContrato)}`}</TableCell>
-                        {/* <TableCell>{row.ejecutivoCierre}</TableCell> */}
                         <TableCell>{row.ejecutivoActual}</TableCell>
                         <TableCell>{nivelAlerta(row.fechaFinContrato)}</TableCell>
                         <TableCell style={{position:'relative', textAlign:'center'}}> <FolderOpenIcon onClick={()=>(setopenDocuments(true))}></FolderOpenIcon>  
@@ -199,12 +190,17 @@ const TablaClientes = () => {
             </TableContainer>
             <Box component='div' className='buttonContainer'>
                 <Button variant="contained" onClick={handleOpen} className='buttonAdd' sx={{height:'48px'}}>Agregar Cliente</Button>
-                <Button onClick={()=>navigate('/agregarServicio')} sx={{height:'48px'}}> Agregar Servicio </Button> 
             </Box>
 
-            <TablaClientesModal open={open} handleClose={handleClose} cliente={cliente} setCliente={setCliente} initialValues={initialValues} setOpen={setOpen}> </TablaClientesModal>
+            <TablaClientesModal 
+                open={open} 
+                handleClose={handleClose} 
+                cliente={cliente} 
+                setCliente={setCliente} 
+                initialValues={initialValues} 
+                setOpen={setOpen}> 
+            </TablaClientesModal>
  
-
         </div>
     );
 }

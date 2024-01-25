@@ -30,7 +30,7 @@ const TablaEjecutivos = () => {
     const [open, setOpen] = React.useState(false);
     const [paginationEjecutivos, SetPaginationEjecutivos] = React.useState([]);
 
-    const intPagination = 3
+    const intPagination = 6
     const numberPagination = Math.ceil(ejecutivos2.length/intPagination)
 
     const handleOpen = () => setOpen(true);
@@ -130,8 +130,24 @@ const TablaEjecutivos = () => {
                     <Pagination count={numberPagination} onChange={handlePagination}/>
                 </Box>
             </TableContainer>
-            <Box component='div' className='buttonContainer'>
-                    {superUser && <Button  variant="contained" onClick={handleOpen} style={{alignContent:'end'}} className='buttonAdd'>Agregar Ejecutivo</Button>}   
+            <Box component='div' className='buttonContainer' style={{ display:'inline'}}>
+                    {superUser && 
+                        <Button  
+                            variant="contained" onClick={handleOpen} 
+                            style={{ width:'33%',justifyItems:'center', alignItems:'center', marginRight:'5%', marginTop:'3%'}}
+                            sx={{height:'40px'}}
+                            >
+                            
+                            Agregar Ejecutivo
+                        </Button>}   
+                    
+                    {superUser && 
+                        <Button 
+                            variant="contained" color="error" onClick={()=>{navigate('/')}}
+                            style={{ width:'33%', justifyItems:'center', alignItems:'center', marginRight:'5%', marginTop:'3%'}}
+                            sx={{height:'40px'}}
+                            > Volver
+                    </Button>}
             </Box>
 
             <Modal
@@ -146,7 +162,12 @@ const TablaEjecutivos = () => {
                     <Box style={{display:'grid'}}>
                         <TextField  size="small" style={{width:'100%'}} onChange={e => setNombre(e.target.value)} ></TextField>
                         <br></br>
-                        <Button variant="contained" size = 'large' className='ejecutivoTablaModalButton' onClick={handleSubmit}> Agregar </Button>
+                        
+                    <Button variant="contained" size= "large" color="error" style={{ width:'47%',height:'100%', justifyItems:'center', alignItems:'center', marginTop:'3%'}} onClick={()=>{navigate('/')}}>
+                        Volver
+                    </Button>
+                    
+                    <Button variant="contained" size = 'large' className='ejecutivoTablaModalButton' onClick={handleSubmit}> Agregar </Button>
                     </Box>
                 </Box>
             </Modal>
