@@ -18,7 +18,7 @@ const TransferList = ({servicios, setServicios}) => {
       fetch(serviciosURL)
       .then((response) => response.json())
       .then((jsonDatos)=>{
-  
+        console.log(jsonDatos)
         let rigthList=[]
         for (let item in jsonDatos){
           rigthList.push(jsonDatos[item].tipoServicio)
@@ -31,7 +31,7 @@ const TransferList = ({servicios, setServicios}) => {
   }, [servicios]);
 
     const leftChecked = intersection(checked, left);
-    const rightChecked = intersection(checked, servicios);
+    const rightChecked = intersection(checked, []);
     const handleToggle = (value) => () => {
         const currentIndex = checked.indexOf(value);
         const newChecked = [...checked];

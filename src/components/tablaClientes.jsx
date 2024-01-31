@@ -13,7 +13,7 @@ import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import CloseIcon from '@mui/icons-material/Close';
 import '../styles/tablas.css'
 import FiltroClientes from './filtroClientes';
-import TablaClientesModal from './tablaClientesModal';
+import AgregarClienteModal from './agregarClienteModal';
 
 const initialValues = {
     nombre: "",
@@ -52,7 +52,7 @@ const TablaClientes = () => {
         fetch(getClientes)
             .then((response) => response.json())
             .then((clientes)=>{
-                console.log(clientes)
+                //console.log(clientes)
                 setClientes(clientes)
                 setClientesFiltrados(clientes)
                 })
@@ -91,19 +91,18 @@ const TablaClientes = () => {
 
         if(desistido === true){
           return   <CloseIcon style={{color:'red'}}/>
-        }
-        if (dias < 30){
+        } else if (dias <= 0){
             return <CircleRounded style={{color:'red'}} />
-        } if (dias >30 && dias < 60){
+        } else if (dias >0 && dias < 60){
             return <CircleRounded style={{color:'yellow'}} />
-        } else{
+        } else if (dias>=60){
             return <CircleRounded style={{color:'green'}} />
         }
     }
 
     return (
         <div className='tabla'>
-            <h1> Tabla Clientes </h1>
+            <h1> Clientes Automatismos lau  </h1>
             <FiltroClientes verFiltros={verFiltros} setVerfiltros={setVerfiltros} clientes={clientes} setClientesFiltrados={setClientesFiltrados}/>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} size="small" aria-label="Tabla Clientes">
@@ -198,14 +197,14 @@ const TablaClientes = () => {
                 <Button variant="contained" onClick={handleOpen} className='buttonAdd' sx={{height:'48px'}}>Agregar Cliente</Button>
             </Box>
 
-            <TablaClientesModal 
+            <AgregarClienteModal 
                 open={open} 
                 handleClose={handleClose} 
                 cliente={cliente} 
                 setCliente={setCliente} 
                 initialValues={initialValues} 
                 setOpen={setOpen}> 
-            </TablaClientesModal>
+            </AgregarClienteModal>
  
         </div>
     );

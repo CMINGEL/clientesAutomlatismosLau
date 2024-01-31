@@ -20,7 +20,6 @@ const Registrar = () => {
     const [error, setError] = useState(false);
     const [msgError, setMsgError] = useState('');
     const [open, setOpen] = React.useState(false);
-    // const [serviciosCliente, setServiciosCliente] = useState([])  
 
     const handleInput = (e) =>{
         const nombre = e.target.name

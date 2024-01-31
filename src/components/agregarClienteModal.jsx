@@ -1,9 +1,13 @@
 import { Box, Button, InputLabel, MenuItem, Modal, Select, TextField, Typography } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import React from 'react';
+import React, { useState } from 'react';
 import { getClientes } from '../server/server';
 import { useEjecutivosContext } from './providers/useEjecutivos';
+import TransferList from './transferList';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { green, pink,} from '@mui/material/colors';
 
 
 const style = {
@@ -18,8 +22,8 @@ const style = {
     p: 4,
   };
 
-const TablaClientesModal = ({open, handleClose, cliente, setCliente, initialValues, setOpen }) => {
-
+const AgregarClienteModal = ({open, handleClose, cliente, setCliente, initialValues, setOpen }) => {
+    const [serviciosCliente, setServiciosCliente] = useState([])
     
     const ejecutivos2 = useEjecutivosContext()
 
@@ -50,7 +54,7 @@ const TablaClientesModal = ({open, handleClose, cliente, setCliente, initialValu
             method:'POST',
             body: JSON.stringify({nombre:cliente.nombre, numeroContacto:cliente.numeroContacto, email:cliente.email, tipoContrato:cliente.tipoContrato, 
                 fechaFinContrato:cliente.fechaFinContrato, fechaInicioContrato:cliente.fechaInicioContrato, ejecutivoCierre:cliente.ejecutivoCierre, 
-                ejecutivoActual:cliente.ejecutivoActual, servicio:cliente.servicios}),
+                ejecutivoActual:cliente.ejecutivoActual, servicios:serviciosCliente}),
             headers: {
                 'Content-Type': 'application/json',
                 },
@@ -67,7 +71,6 @@ const TablaClientesModal = ({open, handleClose, cliente, setCliente, initialValu
         })
     }
 
-
     return (
         <Modal
         open={open}
@@ -77,7 +80,7 @@ const TablaClientesModal = ({open, handleClose, cliente, setCliente, initialValu
         >
         <Box sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-                Agregar Cliente Nuevo
+                Agregar Cliente Nuevos
             </Typography>
             <Box component="form" noValidate autoComplete='off' sx={{'& .MuiTextField-root': { m: 1, width: '25ch' },}}>
                 <div>
@@ -122,6 +125,17 @@ const TablaClientesModal = ({open, handleClose, cliente, setCliente, initialValu
                                 ))}
                     </Select>
                 </div>
+                <Box style={{margin:'10px'}}>
+                    <Box component="div" >                                    
+                        <h5 style={{textAlign:'center', fontSize:'18px'}}> 
+                            Todos los Servicios 
+                            <RemoveIcon sx={{fontSize:22, color: pink[500], verticalAlign:"middle"}} /> Servicios cliente 
+                            <AddCircleOutlineIcon sx={{fontSize: 22, color: green[500], verticalAlign:"middle"}}/>
+                        </h5> 
+                    </Box>
+                    
+                    <TransferList servicios={serviciosCliente} setServicios = {setServiciosCliente}></TransferList> 
+                </Box>
                 <br></br>
                 <Button variant="contained" size ='large' style={{width:'100%',height:'100%' ,justifyItems:'center', alignItems:'center'}} onClick={handleSubmit}> Agregar </Button>
             </Box>
@@ -130,4 +144,4 @@ const TablaClientesModal = ({open, handleClose, cliente, setCliente, initialValu
     );
 }
 
-export default TablaClientesModal;
+export default AgregarClienteModal;

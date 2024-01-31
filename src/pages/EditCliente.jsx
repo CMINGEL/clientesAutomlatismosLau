@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getClientes} from '../server/server';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Box, Button, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControlLabel, InputLabel, MenuItem, Select, Switch, TextField, Typography } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -27,14 +27,15 @@ const EditCliente = () => {
         fechaFinContrato: location.state.cliente.fechaFinContrato ,
         fechaInicioContrato: location.state.cliente.fechaInicioContrato,
         ejecutivoCierre: location.state.cliente.ejecutivoCierre,
-        ejecutivoActual: location.state.cliente.ejecutivoActual
+        ejecutivoActual: location.state.cliente.ejecutivoActual,
+        desistido: location.state.cliente.desistido
     };
     
     const fechaFinContrato = (initialValues.fechaFinContrato.slice(0,10))
     const fechaInicioContrato = (initialValues.fechaInicioContrato.slice(0,10))
     const [cliente, setCliente] = useState(initialValues);
     const [recarga, setRecarga] = useState(false);
-    const [serviciosCliente, setServiciosCliente] = useState(cliente.servicios)  
+    const [serviciosCliente, setServiciosCliente] = useState(cliente.servicios)
 
     useEffect(()=>{
         if(ejecutivos.length<1){
@@ -44,6 +45,21 @@ const EditCliente = () => {
             setRecarga(true)
         }
     }, [ejecutivos, navigate, location.state.cliente]);
+
+    function handleSwitch(){
+        if (cliente.desistido){
+            setCliente({
+                ...cliente,
+                desistido:false
+            })
+        }else{
+            setCliente({
+                ...cliente,
+                desistido:true
+            })
+        }
+        
+    }
 
     function handleInput (e) {
         const nombre = e.target.name
@@ -73,7 +89,7 @@ const EditCliente = () => {
             body: JSON.stringify(
                 {numeroContacto:cliente.numeroContacto.toString(), email:cliente.email.toString(), tipoContrato:cliente.tipoContrato.toString(), 
                     fechaFinContrato:cliente.fechaFinContrato, fechaInicioContrato:cliente.fechaInicioContrato, ejecutivoCierre:cliente.ejecutivoCierre.toString(), 
-                    ejecutivoActual:cliente.ejecutivoActual.toString(), servicios:serviciosCliente, 
+                    ejecutivoActual:cliente.ejecutivoActual.toString(), servicios:serviciosCliente, desistido:cliente.desistido
                 }),
             headers: { 
                 'Content-Type': 'application/json',
@@ -108,6 +124,8 @@ const EditCliente = () => {
                 <Typography id="modal-modal-title" variant="h6" component="h2">
                     Editar cliente
                 </Typography>
+
+            
                 <Box component="form" noValidate autoComplete='off' sx={{m: 1, p: 1}}>
                     <div>
                         <TextField fullWidth label="Nombre Cliente" name='nombre' value={cliente.nombre} onChange={handleInput} style={{ display :'Block'}} sx={{mt:2}}/>
@@ -159,11 +177,16 @@ const EditCliente = () => {
                                         <AddCircleOutlineIcon sx={{fontSize: 22, color: green[500], verticalAlign:"middle"}}/>
                                     </h5> 
                                 </Box>
-                                
-
                                 <TransferList servicios={serviciosCliente} setServicios = {setServiciosCliente}></TransferList> 
                             </Box>
-                            
+                    <FormControlLabel control={
+                        <Switch 
+                            name='desistido'
+                            checked={cliente.desistido} 
+                            onChange={ handleSwitch }
+                            inputProps={{ 'aria-label': 'controlled' }}
+                            />} label="Cliente Desistido" 
+                    />
                     </div>
 
                     <br></br>

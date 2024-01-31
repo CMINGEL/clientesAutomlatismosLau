@@ -49,15 +49,18 @@ const FiltroClientes = ({verFiltros, setVerfiltros, clientes, setClientesFiltrad
         }
 
         else if(event.target.value==='rojo'){
-            const filtered = clientes.filter(cliente => ( nivelAlerta(cliente.fechaFinContrato) ==='rojo' ));
+            let filtered = clientes.filter(cliente => ( nivelAlerta(cliente.fechaFinContrato) ==='rojo' ));
+            filtered = filtered.filter(cliente => cliente.desistido === false)
             setClientesFiltrados(filtered)
         }
         else if(event.target.value==='amarillo'){
-            const filtered = clientes.filter(cliente => ( nivelAlerta(cliente.fechaFinContrato) ==='amarillo' ));
+            let filtered = clientes.filter(cliente => ( nivelAlerta(cliente.fechaFinContrato) ==='amarillo' ));
+            filtered = filtered.filter(cliente => cliente.desistido === false)
             setClientesFiltrados(filtered)
         }
         else if(event.target.value==='verde'){
-            const filtered = clientes.filter(cliente => ( nivelAlerta(cliente.fechaFinContrato) ==='verde' ));
+            let filtered = clientes.filter(cliente => ( nivelAlerta(cliente.fechaFinContrato) ==='verde' ));
+            filtered = filtered.filter(cliente => cliente.desistido === false)
             setClientesFiltrados(filtered)
         }
 
@@ -68,14 +71,14 @@ const FiltroClientes = ({verFiltros, setVerfiltros, clientes, setClientesFiltrad
         
     }
 
-    const nivelAlerta = (fecha2, ) =>{
+    const nivelAlerta = (fecha2) =>{
         const date = new Date();
         const fechaFinal = new Date(fecha2)
         let dias = (fechaFinal.getTime() - date.getTime()) / (1000*60*60*24)
 
-        if (dias < 30){
+        if (dias <= 0){
             return 'rojo' 
-        } if (dias >30 && dias < 60){
+        } if (dias >1 && dias < 60){
             return 'amarillo'
         } else{
             return 'verde'
