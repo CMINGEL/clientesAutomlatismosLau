@@ -3,6 +3,7 @@ import { Box, MenuItem, Paper, Select, Table, TableCell, TableContainer, TableHe
 import React, { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 
@@ -42,24 +43,32 @@ const FiltroClientes = ({verFiltros, setVerfiltros, clientes, setClientesFiltrad
 
         setFiltroTipoAlerta(event.target.value)
 
-        if(event.target.value==='rojo'){
+        if(event.target.value === 'desistido'){
+            const filtered = clientes.filter(cliente => ( cliente.desistido === true ));
+            setClientesFiltrados(filtered)
+        }
+
+        else if(event.target.value==='rojo'){
             const filtered = clientes.filter(cliente => ( nivelAlerta(cliente.fechaFinContrato) ==='rojo' ));
             setClientesFiltrados(filtered)
         }
-        if(event.target.value==='amarillo'){
+        else if(event.target.value==='amarillo'){
             const filtered = clientes.filter(cliente => ( nivelAlerta(cliente.fechaFinContrato) ==='amarillo' ));
             setClientesFiltrados(filtered)
         }
-        if(event.target.value==='verde'){
+        else if(event.target.value==='verde'){
             const filtered = clientes.filter(cliente => ( nivelAlerta(cliente.fechaFinContrato) ==='verde' ));
             setClientesFiltrados(filtered)
         }
-        if(event.target.value==='todos'){
+
+
+        else if(event.target.value==='todos'){
             setClientesFiltrados(clientes)
         }
+        
     }
 
-    const nivelAlerta = (fecha2) =>{
+    const nivelAlerta = (fecha2, ) =>{
         const date = new Date();
         const fechaFinal = new Date(fecha2)
         let dias = (fechaFinal.getTime() - date.getTime()) / (1000*60*60*24)
@@ -96,10 +105,11 @@ const FiltroClientes = ({verFiltros, setVerfiltros, clientes, setClientesFiltrad
                                             <MenuItem value="rojo"> <CircleRounded style={{color:'red'}} /> </MenuItem>
                                             <MenuItem value="amarillo"> <CircleRounded style={{color:'yellow'}} /> </MenuItem>
                                             <MenuItem value="verde"><CircleRounded style={{color:'green'}} /> </MenuItem>
+                                            <MenuItem value = "desistido"> <CloseIcon style={{color:'red'}}/> </MenuItem>
                                         </Select>
                                     </TableCell>
                                     <TableCell >
-                                        <FilterListIcon onClick={handleFilterEstate} style={{float:'right', marginRight:'4px'}}/>
+                                        <FilterListIcon onClick={handleFilterEstate} style={{float:'right', marginRight:'4px', cursor: "pointer" }}/>
                                     </TableCell>
                                 </TableRow>
                             </TableHead>

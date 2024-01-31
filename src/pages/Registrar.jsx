@@ -20,7 +20,7 @@ const Registrar = () => {
     const [error, setError] = useState(false);
     const [msgError, setMsgError] = useState('');
     const [open, setOpen] = React.useState(false);
-    const [serviciosCliente, setServiciosCliente] = useState([])  
+    // const [serviciosCliente, setServiciosCliente] = useState([])  
 
     const handleInput = (e) =>{
         const nombre = e.target.name
@@ -89,7 +89,7 @@ const Registrar = () => {
                 margin:'auto'
                 }}>
                 <Typography id="modal-modal-title" variant="h6" component="h2">
-                    Editar cliente
+                    Nuevo usuario al sistema
                 </Typography>
    
                 <Box component="form" noValidate autoComplete='off' sx={{ m: 1, p: 1}}>

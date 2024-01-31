@@ -122,7 +122,7 @@ const TablaEjecutivos = () => {
                     <TableRow key={row.id}>
                         <TableCell> {row.id} </TableCell>
                         <TableCell> {row.nombre}</TableCell>
-                        <TableCell style={{cursor: "pointer",}} onClick={()=>hanleEdit(row)}> {row.activo? <CircleRoundedIcon style={{color:'green'}}/>: <CircleRoundedIcon style={{color:'red'}}/> }</TableCell>
+                        <TableCell style={{cursor: "pointer"}} onClick={()=>hanleEdit(row)}> {row.activo? <CircleRoundedIcon style={{color:'green'}}/>: <CircleRoundedIcon style={{color:'red'}}/> }</TableCell>
                     </TableRow>))}
                 </TableBody>
                 </Table>
@@ -135,18 +135,16 @@ const TablaEjecutivos = () => {
                         <Button  
                             variant="contained" onClick={handleOpen} 
                             style={{ width:'33%',justifyItems:'center', alignItems:'center', marginRight:'5%', marginTop:'3%'}}
-                            sx={{height:'40px'}}
-                            >
-                            
-                            Agregar Ejecutivo
+                            sx={{height:'48px'}}>
+                                Agregar Ejecutivo
                         </Button>}   
                     
                     {superUser && 
                         <Button 
                             variant="contained" color="error" onClick={()=>{navigate('/')}}
                             style={{ width:'33%', justifyItems:'center', alignItems:'center', marginRight:'5%', marginTop:'3%'}}
-                            sx={{height:'40px'}}
-                            > Volver
+                            sx={{height:'48px'}}> 
+                                Volver
                     </Button>}
             </Box>
 
@@ -160,14 +158,22 @@ const TablaEjecutivos = () => {
                         Agregar Ejecutivo
                     </Typography>
                     <Box style={{display:'grid'}}>
-                        <TextField  size="small" style={{width:'100%'}} onChange={e => setNombre(e.target.value)} ></TextField>
+                        <TextField sx={{width:'100%'}} 
+                        inputProps={{
+                            style: {
+                                height: "15px"
+                            }
+                        }}
+                        onChange={e => setNombre(e.target.value)} ></TextField>
                         <br></br>
                         
-                    <Button variant="contained" size= "large" color="error" style={{ width:'47%',height:'100%', justifyItems:'center', alignItems:'center', marginTop:'3%'}} onClick={()=>{navigate('/')}}>
-                        Volver
-                    </Button>
-                    
-                    <Button variant="contained" size = 'large' className='ejecutivoTablaModalButton' onClick={handleSubmit}> Agregar </Button>
+                        <Button variant="contained" size= "large" color="error" sx={{mb:'2%', height:'48px'}} onClick={()=>{navigate('/')}}>
+                            Volver
+                        </Button>
+                        
+                        <Button variant="contained" size = 'large' className='ejecutivoTablaModalButton' sx={{mb:'1%', height:'48px'}} onClick={handleSubmit}>
+                            Agregar 
+                        </Button>
                     </Box>
                 </Box>
             </Modal>

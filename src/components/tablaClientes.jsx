@@ -10,6 +10,7 @@ import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import ImageIcon from '@mui/icons-material/Image';
 import WorkIcon from '@mui/icons-material/Work';
 import BeachAccessIcon from '@mui/icons-material/BeachAccess';
+import CloseIcon from '@mui/icons-material/Close';
 import '../styles/tablas.css'
 import FiltroClientes from './filtroClientes';
 import TablaClientesModal from './tablaClientesModal';
@@ -35,7 +36,7 @@ const TablaClientes = () => {
     const [open, setOpen] = useState(false);
     const [paginationClientes, SetPaginationClientes] = useState([]);
     const [openDocuments, setopenDocuments] = useState(false);
-    const [verFiltros, setVerfiltros] = useState(false)
+    const [verFiltros, setVerfiltros] = useState(true)
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     
@@ -51,6 +52,7 @@ const TablaClientes = () => {
         fetch(getClientes)
             .then((response) => response.json())
             .then((clientes)=>{
+                console.log(clientes)
                 setClientes(clientes)
                 setClientesFiltrados(clientes)
                 })
@@ -82,11 +84,14 @@ const TablaClientes = () => {
         navigate('/editcliente', { state : {cliente} });
     }
 
-    const nivelAlerta = (fecha2) =>{
+    const nivelAlerta = (fecha2, desistido) =>{
         const date = new Date();
         const fechaFinal = new Date(fecha2)
         let dias = (fechaFinal.getTime() - date.getTime()) / (1000*60*60*24)
 
+        if(desistido === true){
+          return   <CloseIcon style={{color:'red'}}/>
+        }
         if (dias < 30){
             return <CircleRounded style={{color:'red'}} />
         } if (dias >30 && dias < 60){
@@ -112,7 +117,7 @@ const TablaClientes = () => {
                         <TableCell sx={{ fontWeight: 'bold' }}> EJECUTIVO A CARGO </TableCell>
                         <TableCell sx={{ fontWeight: 'bold' }}> ALERTA </TableCell>
                         <TableCell sx={{ fontWeight: 'bold' }}> DOCUMENTOS </TableCell>
-                        {superUser && <TableCell> EDIT </TableCell>} 
+                        {superUser && <TableCell sx={{ fontWeight: 'bold' }}> EDITAR </TableCell>} 
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -127,9 +132,10 @@ const TablaClientes = () => {
                         <TableCell> {`${removeTime(row.fechaInicioContrato)}`} </TableCell>
                         <TableCell> {`${removeTime(row.fechaFinContrato)}`}</TableCell>
                         <TableCell>{row.ejecutivoActual}</TableCell>
-                        <TableCell>{nivelAlerta(row.fechaFinContrato)}</TableCell>
-                        <TableCell style={{position:'relative', textAlign:'center'}}> <FolderOpenIcon onClick={()=>(setopenDocuments(true))}></FolderOpenIcon>  
-                        
+                        <TableCell>{nivelAlerta(row.fechaFinContrato, row.desistido)}</TableCell>
+                        <TableCell style={{position:'relative', textAlign:'center', }}> 
+                            <FolderOpenIcon onClick={()=>(setopenDocuments(true))} style={{ cursor: "pointer" }} />
+
                             <Dialog
                                 open={openDocuments}
                                 onClose={handleClose}
@@ -173,14 +179,14 @@ const TablaClientes = () => {
 
                                     </DialogContentText>
                                 </DialogContent>
-                                <DialogActions>
+                                <DialogActions >
                                     <Button onClick={()=>(setopenDocuments(false))}>Agregar Nuevo</Button>
                                     <Button onClick={()=>(setopenDocuments(false))} autoFocus> Cerrar </Button>
                                 </DialogActions> 
                             </Dialog>
                         
                         </TableCell>
-                        {superUser && <TableCell><EditIcon onClick={()=>handleEdit(row)}> </EditIcon></TableCell>}
+                        {superUser && <TableCell><EditIcon onClick={()=>handleEdit(row)} style={{ cursor: "pointer" }}> </EditIcon></TableCell>}
                     </TableRow>   ))}
                 </TableBody>
                 </Table>

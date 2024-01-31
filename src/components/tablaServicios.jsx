@@ -6,20 +6,18 @@ import { serviciosURL } from '../server/server';
 const TablaServicios = ( {servicios, setServicios} ) => {
 
     const handleServiceDelete = (id, name) => {
-        fetch(serviciosURL+id+'/', {method: 'DELETE'})
-            .then(response => {
-                if (response.status === 202){
-                    if (window.confirm(`Desea eliminar: ${name}?`)){
-                        console.log(`Borrado exitosamente: ${name}`)
-                        setServicios(servicios.filter(servicio => servicio.id !== id))
-                    }
+        if (window.confirm(`Desea eliminar: ${name}?`)){
 
-                }else{
-                    console.log(`Servicio no eliminado: ${name}`)
+            fetch(serviciosURL+id+'/', {method: 'DELETE'})
+                .then(response => {
+                    if (response.status === 202){
+                        console.log(`Borrado exitosamente: ${name}`)
+                        setServicios(servicios.filter(servicio => servicio.id !== id))                    
+                    }else
+                    {  console.log(`Servicio no eliminado: ${name}`)}
                 }
-                
-            })
-    }
+            )
+        }}
 
     return (
         <div>
