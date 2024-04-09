@@ -102,7 +102,7 @@ const TablaClientes = () => {
 
     return (
         <div className='tabla'>
-            <h1> Clientes Automatismos lau  </h1>
+            <h1> Clientes Automatismos Lau  </h1>
             <FiltroClientes verFiltros={verFiltros} setVerfiltros={setVerfiltros} clientes={clientes} setClientesFiltrados={setClientesFiltrados}/>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} size="small" aria-label="Tabla Clientes">
@@ -126,12 +126,12 @@ const TablaClientes = () => {
 
                     {paginationClientes.map((row) => (
                     <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                        <TableCell>{row.nombre}</TableCell>
-                        <TableCell>{row.tipoContrato}</TableCell>
+                        <TableCell> {row.nombre}</TableCell>
+                        <TableCell> {row.tipoContrato}</TableCell>
                         <TableCell> {`${removeTime(row.fechaInicioContrato)}`} </TableCell>
                         <TableCell> {`${removeTime(row.fechaFinContrato)}`}</TableCell>
-                        <TableCell>{row.ejecutivoActual}</TableCell>
-                        <TableCell>{nivelAlerta(row.fechaFinContrato, row.desistido)}</TableCell>
+                        <TableCell> {row.ejecutivoActual}</TableCell>
+                        <TableCell> {nivelAlerta(row.fechaFinContrato, row.desistido)}</TableCell>
                         <TableCell style={{position:'relative', textAlign:'center', }}> 
                             <FolderOpenIcon onClick={()=>(setopenDocuments(true))} style={{ cursor: "pointer" }} />
 
@@ -205,7 +205,7 @@ const TablaClientes = () => {
                 initialValues={initialValues} 
                 setOpen={setOpen}> 
             </AgregarClienteModal>
- 
+     
         </div>
     );
 }
