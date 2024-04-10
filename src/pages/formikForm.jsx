@@ -1,41 +1,48 @@
-import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import React, { useState } from 'react';
+// import { Form } from 'formik';
+import { Box, TextField } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { addUser } from '../redux/userSlice';
 
-const initialValues={
-    name:"",
-    email:"",
-    password:""
-}
 
-const validar = (values) => {
-    const errors = {}
-    if(values.password.length < 5){ errors.password = 'La contraseña es demasiado corta, debe ser mayor a 5 caracteres'}
-    if(values.password.length > 15){ errors.password = 'La contraseña es demasiado larga, debe ser menor de 15 caracteres'}
-    if(!values.email.includes('@')){ errors.email = 'Email debe ser valido'}
-    if(!values.email.includes('.')){ errors.email = 'Email debe ser valido'}
-    return errors
-}
+const valoresIniciales={ 'name':'', 'email':'', 'username':''}
 
 const FormikForm = () => {
+    const user = useSelector((state)=> state.user) 
+    const [datos, setDatos] = useState(valoresIniciales)
 
-    const registrar = (values)=>{
-        console.log(values)
+    const dispatch = useDispatch()
+
+    const handleChange = (e)=>{ 
+        setDatos({
+            ...datos,
+            [e.target.name] : e.target.value
+        })
+    }
+
+    const registrar = ()=>{
+        dispatch(addUser(datos))
+        console.log(datos)
     }
     return (
-        <div>
-            <Formik initialValues={initialValues} 
-                onSubmit={registrar}
-                validate={ validar }>
-                <Form>
-                    <Field name="name" type="text"/>
-                    <Field name="email" type="email"/>
-                    <ErrorMessage name='password'/>
-                    <Field name="password" type="password"/>
-                    <ErrorMessage name='password'/>
-                    <button type='submit'> Registrar </button>
-                </Form>
-            </Formik>
-        </div>
+        <Box>
+
+            <Box sx={{display:'flex', flexDirection:'column', width:'200px'}}>
+                <label>Name</label>
+                
+                <TextField name="name" type="text" onChange={handleChange}/>
+                <label>Email</label>
+                <TextField name="email" type="email" onChange={handleChange}/>
+                <label>Username</label>
+                <TextField name="username" type="text" onChange={handleChange}/>
+                <button onClick={registrar}> Registrar </button>
+            </Box>
+
+
+            <div> Name {user.name} </div>
+            <div> Email {user.email} </div>
+            <div> Username {user.username} </div>
+        </Box>
     );
 }
 
