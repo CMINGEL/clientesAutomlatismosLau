@@ -14,6 +14,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import '../styles/tablas.css'
 import FiltroClientes from './filtroClientes';
 import AgregarClienteModal from './agregarClienteModal';
+import axios from 'axios';
 
 const initialValues = {
     nombre: "",
@@ -49,12 +50,12 @@ const TablaClientes = () => {
 
     useEffect(()=> {
         setLoading(true)
-        fetch(getClientes)
-            .then((response) => response.json())
+        axios.get(getClientes)
+            // .then((response) => response.json())
             .then((clientes)=>{
                 //console.log(clientes)
-                setClientes(clientes)
-                setClientesFiltrados(clientes)
+                setClientes(clientes.data)
+                setClientesFiltrados(clientes.data)
                 })
             .catch((error) => setError('true'))
             .finally(() => setLoading(false)

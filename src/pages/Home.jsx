@@ -6,11 +6,18 @@ import { getejecutivos } from '../server/server';
 import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
+import { useSelector } from 'react-redux';
+
 const Home = () => {
 const setEjecutivos2 = useSetEjecutivosContext()
 const setErrorEjecutivos = useSetErrorEjecutivosContext()
 const setLoadingEjecutivos = useSetLoadingEjecutivos()
 const localToken = localStorage.getItem('Token')  
+
+// const user = useSelector( state => state.user) 
+// const session = useSelector((state)=> state.session)
+
+
 let navigate = useNavigate();
 
     useEffect(()=>{
@@ -51,6 +58,12 @@ let navigate = useNavigate();
                 }}>
                 <TablaClientes/>
                 {/* <TablaEjecutivos/> */}
+                {/* <div> {user.email} </div> */}
+                {/* <div> {user.name} </div> */}
+                {/* <div> {user.username} </div> */}
+                
+                
+                
             </Box>
         </div>
     );
