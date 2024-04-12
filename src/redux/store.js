@@ -1,4 +1,4 @@
-import { thunk } from 'redux-thunk'
+// import { thunk } from 'redux-thunk'
 import { configureStore, combineReducers } from "@reduxjs/toolkit"
 import userSlice from "./userSlice";
 import sesionReducer from "./sesionSlice"
